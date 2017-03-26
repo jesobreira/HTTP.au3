@@ -94,6 +94,7 @@ All these 3 main functions, in case of error, will return 0 and set @error to no
 * 1: Could not instantiate WinHTTP and open a POST request.
 * 2: Could not send request.
 * 3: Other HTTP error (in this case @extended will return the HTTP status from the server)
+* 4: Uploaded file does not exist (_HTTP_Upload() only)
 
 ### Attributions
 
