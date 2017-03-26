@@ -40,9 +40,20 @@ EndFunc   ;==>_HTTP_Post
 
 Func _HTTP_Upload($strUploadUrl, $strFilePath, $strFileField, $strDataPairs = '', $strFilename = Default)
 	If $strFilename = Default Then $strFilename = StringMid($strFilePath, StringInStr($strFilePath, "\", 0, -1) + 1)
-	Local $MULTIPART_BOUNDARY = "----WebKitFormBoundaryE3ljMozBTcgaOhpd"
+	Local $MULTIPART_BOUNDARY = "----WebKitFormBoundary"
+		$pwd = ""
+	Dim $aSpace[3]
+	For $i = 1 To 16
+		$aSpace[0] = Chr(Random(65, 90, 1)) ;A-Z
+		$aSpace[1] = Chr(Random(97, 122, 1)) ;a-z
+		$aSpace[2] = Chr(Random(48, 57, 1)) ;0-9
+		$MULTIPART_BOUNDARY &= $aSpace[Random(0, 2, 1)]
+	Next
 	Local $bytFormData, $bytFormStart, $bytFile
 	Local $strFormStart, $strFormEnd, $strDataPair
+	If Not FileExists($strFilePath) Then
+		Return SetError(4, 0, 0)
+	EndIf
 	$h = FileOpen($strFilePath, 16)
 	$bytFile = FileRead($h)
 	FileClose($h)
@@ -50,15 +61,17 @@ Func _HTTP_Upload($strUploadUrl, $strFilePath, $strFileField, $strDataPairs = ''
 	; Define the end of form
 	$strFormEnd = @CRLF & "--" & $MULTIPART_BOUNDARY & "--" & @CRLF
 	; First add any ordinary form data pairs
-	Local $split = StringSplit($strDataPairs, "&")
-	For $i = 1 To $split[0]
-		$splitagain = StringSplit($split[$i], "=")
-		$strFormStart &= "--" & $MULTIPART_BOUNDARY & @CRLF & _
-				"Content-Disposition: form-data; " & _
-				"name=""" & $splitagain[1] & """" & _
-				@CRLF & @CRLF & _
-				URLDecode($splitagain[2]) & @CRLF
-	Next
+	If $strDataPairs Then
+		Local $split = StringSplit($strDataPairs, "&")
+		For $i = 1 To $split[0]
+			$splitagain = StringSplit($split[$i], "=")
+			$strFormStart &= "--" & $MULTIPART_BOUNDARY & @CRLF & _
+					"Content-Disposition: form-data; " & _
+					"name=""" & $splitagain[1] & """" & _
+					@CRLF & @CRLF & _
+					URLDecode($splitagain[2]) & @CRLF
+		Next
+	EndIf
 	; Now add the header for the uploaded file
 	$strFormStart &= "--" & $MULTIPART_BOUNDARY & @CRLF & _
 			"Content-Disposition: form-data; " & _
