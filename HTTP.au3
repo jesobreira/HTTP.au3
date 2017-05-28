@@ -120,8 +120,10 @@ EndFunc   ;==>URLEncode
 Func URLDecode($urlText)
 	$urlText = StringReplace($urlText, "+", " ")
 	Local $matches = StringRegExp($urlText, "\%([abcdefABCDEF0-9]{2})", 3)
-	For $match In $matches
-		$urlText = StringReplace($urlText, "%" & $match, BinaryToString('0x' & $match))
-	Next
+	If Not @error Then
+		For $match In $matches
+			$urlText = StringReplace($urlText, "%" & $match, BinaryToString('0x' & $match))
+		Next
+	EndIf
 	Return $urlText
 EndFunc   ;==>URLDecode
