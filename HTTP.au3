@@ -18,13 +18,12 @@ Func OnError()
     ConsoleWrite("We intercepted a COM Error !" & @LF & _
             "Number is: " & $HexNumber & @LF & _
             "Windescription is: " & $oMyError.windescription & @LF)
-    Return SetError(1, $HexNumber)
+    Return SetError(5, $HexNumber, 0)
 EndFunc   ;==>OnError
 
 Func _HTTP_Get($url)
 	Local $oHTTP = ObjCreate("winhttp.winhttprequest.5.1")
-	$res = $oHTTP.Open("GET", $url, False)
-	;MsgBox(4096,"tit",@error)
+	Local $res = $oHTTP.Open("GET", $url, False)
 	If (@error) Then Return SetError(1, 0, 0)
 	$oHTTP.Send()
 	If (@error) Then Return SetError(2, 0, 0)
