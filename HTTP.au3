@@ -5,11 +5,26 @@
 
 	made by @Jefrey
 	Repo: http://github.com/jesobreira/HTTP.au3
+
+	edited by @Tumio
 #ce
+
+$oMyError = ObjEvent("AutoIt.Error", "OnError") ; Install a custom error handler
+
+; Custom error handler will set @error variable to 1 if a COM error is intercepted
+; and will print out the error informations by the Console
+Func OnError()
+    $HexNumber = Hex($oMyError.number, 8)
+    ConsoleWrite("We intercepted a COM Error !" & @LF & _
+            "Number is: " & $HexNumber & @LF & _
+            "Windescription is: " & $oMyError.windescription & @LF)
+    Return SetError(1, $HexNumber)
+EndFunc   ;==>OnError
 
 Func _HTTP_Get($url)
 	Local $oHTTP = ObjCreate("winhttp.winhttprequest.5.1")
-	$oHTTP.Open("GET", $url, False)
+	$res = $oHTTP.Open("GET", $url, False)
+	;MsgBox(4096,"tit",@error)
 	If (@error) Then Return SetError(1, 0, 0)
 	$oHTTP.Send()
 	If (@error) Then Return SetError(2, 0, 0)
