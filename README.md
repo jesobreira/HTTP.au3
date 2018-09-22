@@ -57,7 +57,7 @@ Error: 0 and set @error to non-zero (see remarks).
 Example
 
 ```
-_HTTP_Upload("http://test/upload", @HomeDrive & "\Picture.jpg")
+_HTTP_Upload("http://test/upload", @HomeDrive & "\Picture.jpg", "photo")
 ```
 
 ## Remarks
@@ -95,6 +95,7 @@ All these 3 main functions, in case of error, will return 0 and set @error to no
 * 2: Could not send request.
 * 3: Other HTTP error (in this case @extended will return the HTTP status from the server)
 * 4: Uploaded file does not exist (_HTTP_Upload() only)
+* 5: Other COM error (@extended will contain the error hex code, whereas the console will show up the error description)
 
 ### Attributions
 
